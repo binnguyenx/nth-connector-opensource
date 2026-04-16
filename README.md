@@ -43,11 +43,26 @@ npm install
 1. Create a project at [supabase.com](https://supabase.com).
 2. In the SQL editor, run `supabase_setup.sql` to create the `posts` table and RLS policies.
 3. Deploy the Edge Functions:
+
+   If you have the Supabase CLI installed (`brew install supabase/tap/supabase`):
    ```bash
+   supabase login
+   supabase link --project-ref your-project-id
    supabase functions deploy submit-post
    supabase functions deploy submit-update
    supabase functions deploy sheet-sync   # optional — syncs to Google Sheets
    ```
+
+   Or without installing anything, use `npx`:
+   ```bash
+   npx supabase login
+   npx supabase link --project-ref your-project-id
+   npx supabase functions deploy submit-post
+   npx supabase functions deploy submit-update
+   npx supabase functions deploy sheet-sync   # optional
+   ```
+
+   Your project ID is in the Supabase dashboard under **Project Settings → General**.
 
 ### 3. Set up Cloudinary
 
