@@ -15,7 +15,7 @@ const supabase = createClient(
 // Set to true to hold posts for manual approval, false to approve automatically
 const REQUIRE_APPROVAL = true
 
-const DEFAULT_IMAGE_URL = 'https://res.cloudinary.com/drnlcmzsy/image/upload/v1774757795/dmfay0dilxqkzecx7yop.jpg'
+const DEFAULT_IMAGE_URL = Deno.env.get('DEFAULT_IMAGE_URL') ?? ''
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
@@ -39,6 +39,10 @@ Deno.serve(async (req) => {
     }
   } catch (e) {
     console.error('Redis error:', e)
+    return new Response(
+      JSON.stringify({ error: 'Service temporarily unavailable. Please try again later.' }),
+      { status: 503, headers: { ...CORS, 'Content-Type': 'application/json' } }
+    )
   }
 
   let form: FormData
@@ -63,6 +67,27 @@ Deno.serve(async (req) => {
   const facebook   = form.get('facebook') as string | null
   const linkedin   = form.get('linkedin') as string | null
   const imageFile  = form.get('image') as File | null
+
+  if (!name?.trim() || !cls?.trim() || !school_year?.trim() || !city?.trim() || !country?.trim()) {
+    return new Response(
+      JSON.stringify({ error: 'Name, class, school year, city, and country are required.' }),
+      { status: 400, headers: { ...CORS, 'Content-Type': 'application/json' } }
+    )
+  }
+
+  if (isNaN(lat) || isNaN(lng)) {
+    return new Response(
+      JSON.stringify({ error: 'Invalid location coordinates.' }),
+      { status: 400, headers: { ...CORS, 'Content-Type': 'application/json' } }
+    )
+  }
+
+  if (imageFile && imageFile.size > 5 * 1024 * 1024) {
+    return new Response(
+      JSON.stringify({ error: 'Image must be under 5 MB.' }),
+      { status: 400, headers: { ...CORS, 'Content-Type': 'application/json' } }
+    )
+  }
 
   let image_url = DEFAULT_IMAGE_URL
   if (imageFile && imageFile.size > 0) {

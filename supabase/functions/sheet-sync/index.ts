@@ -14,16 +14,28 @@ Deno.serve(async (req) => {
     return new Response('Unauthorized', { status: 401 })
   }
 
-  let record: Record<string, unknown>
+  let body: Record<string, unknown>
   try {
-    record = await req.json()
+    body = await req.json()
   } catch {
     return new Response(JSON.stringify({ error: 'Invalid JSON' }), { status: 400 })
   }
 
   const { error } = await supabase.from('posts').insert({
-    ...record,
-    approved: true,
+    name:           body.name,
+    class:          body.class,
+    school_year:    body.school_year,
+    city:           body.city,
+    country:        body.country,
+    caption:        body.caption ?? null,
+    image_url:      body.image_url ?? null,
+    lat:            body.lat,
+    lng:            body.lng,
+    instagram:      body.instagram ?? null,
+    facebook:       body.facebook ?? null,
+    linkedin:       body.linkedin ?? null,
+    secondary_class: body.secondary_class ?? null,
+    approved:       true,
   })
 
   if (error) {

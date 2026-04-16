@@ -34,6 +34,10 @@ Deno.serve(async (req) => {
     }
   } catch (e) {
     console.error('Redis error:', e)
+    return new Response(
+      JSON.stringify({ error: 'Service temporarily unavailable. Please try again later.' }),
+      { status: 503, headers: { ...CORS, 'Content-Type': 'application/json' } }
+    )
   }
 
   let form: FormData
@@ -58,6 +62,13 @@ Deno.serve(async (req) => {
   }
 
   const imageFile = form.get('image') as File | null
+  if (imageFile && imageFile.size > 5 * 1024 * 1024) {
+    return new Response(
+      JSON.stringify({ error: 'Image must be under 5 MB.' }),
+      { status: 400, headers: { ...CORS, 'Content-Type': 'application/json' } }
+    )
+  }
+
   let image_url: string | null = null
   if (imageFile && imageFile.size > 0) {
     try {
