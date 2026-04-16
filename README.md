@@ -69,7 +69,11 @@ npm install
 1. Create a free account at [cloudinary.com](https://cloudinary.com).
 2. Create an **unsigned upload preset** in Settings → Upload.
 3. Note your cloud name — update `src/cloudinary.ts` with your cloud name.
-4. Set `CLOUDINARY_CLOUD_NAME` and `CLOUDINARY_UPLOAD_PRESET` in your Supabase Edge Function secrets.
+4. Set the following in **Supabase Dashboard → Project Settings → Edge Functions → Secrets**:
+   - `CLOUDINARY_CLOUD_NAME` — your cloud name
+   - `CLOUDINARY_API_KEY` — from Cloudinary dashboard
+   - `CLOUDINARY_API_SECRET` — from Cloudinary dashboard
+   - `DEFAULT_IMAGE_URL` — a fallback Cloudinary image URL used when a member submits without a photo
 
 ### 4. Configure environment
 
