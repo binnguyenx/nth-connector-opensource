@@ -82,9 +82,9 @@ npm install
    - `CLOUDINARY_API_SECRET` — from Cloudinary dashboard
    - `DEFAULT_IMAGE_URL` — a fallback Cloudinary image URL used when a member submits without a photo
 
-### 4. Set up Upstash Redis (rate limiting)
+### 4. Set up Upstash Redis (rate limiting, optional)
 
-The submission forms are rate-limited via [Upstash](https://upstash.com) Redis. Without this configured, the Edge Functions will reject all requests.
+The Edge Functions can rate-limit via [Upstash](https://upstash.com) Redis. **If you skip this step,** `submit-post` and `submit-update` still work — they simply skip rate limiting until you add the secrets below (recommended for production).
 
 1. Create a free account at [upstash.com](https://upstash.com).
 2. Create a new Redis database.

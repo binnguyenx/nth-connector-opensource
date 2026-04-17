@@ -1,12 +1,7 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-import { Redis } from 'https://esm.sh/@upstash/redis'
 import { corsHeaders } from '../_shared/cors.ts'
 import { uploadToCloudinary } from '../_shared/cloudinary.ts'
-
-const redis = new Redis({
-  url: Deno.env.get('UPSTASH_REDIS_REST_URL')!,
-  token: Deno.env.get('UPSTASH_REDIS_REST_TOKEN')!,
-})
+import { checkRateLimit } from '../_shared/rateLimit.ts'
 
 const supabase = createClient(
   Deno.env.get('SUPABASE_URL')!,
@@ -23,22 +18,11 @@ Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: CORS })
   if (req.method !== 'POST') return new Response('Method not allowed', { status: 405, headers: CORS })
 
-  try {
-    const ip = req.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? 'unknown'
-    const key = `rate:submit:${ip}`
-    const count = await redis.incr(key)
-    if (count === 1) await redis.expire(key, 86400)
-    if (count > 2) {
-      return new Response(
-        JSON.stringify({ error: 'Too many submissions. Please try again later.' }),
-        { status: 429, headers: { ...CORS, 'Content-Type': 'application/json' } }
-      )
-    }
-  } catch (e) {
-    console.error('Redis error:', e)
+  const ip = req.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? 'unknown'
+  if ((await checkRateLimit(ip, 'submit-post', 2, 86400)) === 'limited') {
     return new Response(
-      JSON.stringify({ error: 'Service temporarily unavailable. Please try again later.' }),
-      { status: 503, headers: { ...CORS, 'Content-Type': 'application/json' } }
+      JSON.stringify({ error: 'Too many submissions. Please try again later.' }),
+      { status: 429, headers: { ...CORS, 'Content-Type': 'application/json' } }
     )
   }
 
