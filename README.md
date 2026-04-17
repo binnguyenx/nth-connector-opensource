@@ -17,7 +17,7 @@ A full-stack web app for alumni communities to map where members live, share upd
 - **Submit form** — lets alumni add themselves with name, class, graduation year, location (via OpenStreetMap autocomplete), photo, caption, and social links.
 - **Update form** — lets existing members update their location, caption, photo, or socials without re-submitting.
 
-Public visitors only see posts where `approved = true` (see `supabase_setup.sql`). New submissions can be held for moderation depending on your Edge Function setting (`REQUIRE_APPROVAL` in `submit-post`).
+Public visitors only see posts where `approved = true` (see `supabase_setup.sql`). By default `REQUIRE_APPROVAL` in `submit-post` is **false** (new posts go live immediately). Set it to `true` and redeploy if you want manual moderation in Supabase Table Editor.
 
 ---
 
