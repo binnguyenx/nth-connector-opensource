@@ -6,7 +6,7 @@ A full-stack web app for alumni communities to map where members live, share upd
 
 **Deploy your own:** connect the repo to **Vercel** and set the environment variables from `.env.example` in the Vercel dashboard. Replace Open Graph / Twitter URLs in `index.html` with your production domain when you ship.
 
-**Live example:** [nth-network.vercel.app](https://nth-network.vercel.app)
+**Live example:** [nth-connector-opensource.vercel.app](https://nth-connector-opensource.vercel.app)
 
 ---
 
