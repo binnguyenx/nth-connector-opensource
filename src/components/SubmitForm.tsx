@@ -152,7 +152,7 @@ export default function SubmitForm({ onSuccess, posts = [] }: Props) {
       <div className="submit-success">
         <div className="submit-success-icon">✓</div>
         <h2>Lời nhắn đã được gửi và đang chờ duyệt!</h2>
-        <span className="submit-success-highlight">Chào mừng bạn đã trở về nhà 🏠</span>
+        <span className="submit-success-highlight">Chào mừng bạn đã trở về Hiền 🏡</span>
       </div>
     )
   }
