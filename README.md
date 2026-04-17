@@ -1,6 +1,10 @@
-# Alumni Network Connector
+# Alumni Network Connector (NTH fork)
 
-A full-stack web app for alumni communities to map where members live, share updates, and stay connected. Built for the Pétrus Ký – Nguyễn Thượng Hiền alumni network, but designed to be forked and adapted for any school or community.
+A full-stack web app for alumni communities to map where members live, share updates, and stay connected. This fork is tailored for **Trường THPT Nguyễn Thượng Hiền** ([thptnguyenthuonghien.hcm.edu.vn](https://thptnguyenthuonghien.hcm.edu.vn/)). The project remains easy to fork for any school or community.
+
+**Original open-source project:** created by Jimmy Nguyen (CA1 20–23). This repo adapts branding, links, and deployment for NTH.
+
+**Deploy your own:** connect the repo to **Vercel** and set the environment variables from `.env.example` in the Vercel dashboard. Replace Open Graph / Twitter URLs in `index.html` with your production domain when you ship.
 
 **Live example:** [nth-network.vercel.app](https://nth-network.vercel.app)
 
@@ -12,6 +16,8 @@ A full-stack web app for alumni communities to map where members live, share upd
 - **Gallery** — filterable grid of alumni cards (by class, graduation year, city, country) synchronized with the globe.
 - **Submit form** — lets alumni add themselves with name, class, graduation year, location (via OpenStreetMap autocomplete), photo, caption, and social links.
 - **Update form** — lets existing members update their location, caption, photo, or socials without re-submitting.
+
+Public visitors only see posts where `approved = true` (see `supabase_setup.sql`). New submissions can be held for moderation depending on your Edge Function setting (`REQUIRE_APPROVAL` in `submit-post`).
 
 ---
 
@@ -33,8 +39,8 @@ A full-stack web app for alumni communities to map where members live, share upd
 ### 1. Clone and install
 
 ```bash
-git clone https://github.com/your-username/alumni-network-connector
-cd alumni-network-connector
+git clone https://github.com/binnguyenx/nth-connector-opensource.git
+cd nth-connector-opensource
 npm install
 ```
 
@@ -45,6 +51,7 @@ npm install
 3. Deploy the Edge Functions:
 
    If you have the Supabase CLI installed (`brew install supabase/tap/supabase`):
+
    ```bash
    supabase login
    supabase link --project-ref your-project-id
@@ -54,6 +61,7 @@ npm install
    ```
 
    Or without installing anything, use `npx`:
+
    ```bash
    npx supabase login
    npx supabase link --project-ref your-project-id
@@ -68,8 +76,7 @@ npm install
 
 1. Create a free account at [cloudinary.com](https://cloudinary.com).
 2. Create an **unsigned upload preset** in Settings → Upload.
-3. Note your cloud name — update `src/cloudinary.ts` with your cloud name.
-4. Set the following in **Supabase Dashboard → Project Settings → Edge Functions → Secrets**:
+3. Set the following in **Supabase Dashboard → Project Settings → Edge Functions → Secrets**:
    - `CLOUDINARY_CLOUD_NAME` — your cloud name
    - `CLOUDINARY_API_KEY` — from Cloudinary dashboard
    - `CLOUDINARY_API_SECRET` — from Cloudinary dashboard
@@ -91,12 +98,16 @@ The submission forms are rate-limited via [Upstash](https://upstash.com) Redis. 
 cp .env.example .env
 ```
 
-Fill in your Supabase project URL and anon key:
+Fill in at least:
 
 ```
 VITE_SUPABASE_URL=https://your-project.supabase.co
-VITE_SUPABASE_PUBLISHABLE_KEY=your-anon-key
+VITE_SUPABASE_PUBLISHABLE_KEY=your-publishable-or-anon-key
+VITE_CLOUDINARY_CLOUD_NAME=your-cloudinary-cloud-name
+VITE_CLOUDINARY_UPLOAD_PRESET=your-unsigned-upload-preset
 ```
+
+See `.env.example` for Edge Function secrets (set in the Supabase dashboard, not in the frontend `.env`).
 
 ### 6. Run locally
 
@@ -141,7 +152,7 @@ The frontend deploys to Vercel with zero config — connect the repo and add you
 
 ## Contributing
 
-Contributions are welcome! If you've adapted this for your own community and built something useful, feel free to open a PR.
+Contributions are welcome! If you have adapted this for your own community and built something useful, feel free to open a PR.
 
 - **Bug fixes and improvements** — open a PR against `master`
 - **New features** — open an issue first to discuss before building
