@@ -1,8 +1,8 @@
 # Alumni Network Connector
 
-A full-stack web app for alumni communities to map where members live, share updates, and stay connected. Built for the Pétrus Ký – Lê Hồng Phong alumni network, but designed to be forked and adapted for any school or community.
+A full-stack web app for alumni communities to map where members live, share updates, and stay connected. Built for the Pétrus Ký – Nguyễn Thượng Hiền alumni network, but designed to be forked and adapted for any school or community.
 
-**Live example:** [lhp-network.vercel.app](https://lhp-network.vercel.app)
+**Live example:** [nth-network.vercel.app](https://nth-network.vercel.app)
 
 ---
 

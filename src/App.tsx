@@ -39,8 +39,8 @@ async function fetchPosts() {
       <header className="site-header">
         <div className="header-inner">
           <div className="header-title">
-            <h1>The Pétrus Ký - Le Hong Phong Network</h1>
-            <p className="header-sub">Mạng lưới Cựu học sinh Trường Pétrus Ký - Lê Hồng Phong</p>
+            <h1>The Pétrus Ký - Nguyen Thuong Hien Network</h1>
+            <p className="header-sub">Mạng lưới Cựu học sinh Trường Pétrus Ký - Nguyễn Thượng Hiền</p>
           </div>
           <nav className="site-nav desktop-nav">
             <button className={page === 'gallery' ? 'nav-btn active' : 'nav-btn'} onClick={() => setPage('gallery')}>
@@ -69,7 +69,7 @@ async function fetchPosts() {
       </main>
 
       <footer className="site-footer">
-        <p>The PK-LHP Network · Petrus Ký · Lê Hồng Phong · Est. 1927</p>
+        <p>The PK-NTH Network · Petrus Ký · Nguyễn Thượng Hiền · Est. 1927</p>
         <p>Built By Jimmy Nguyen CA1 20-23, with love ❤️</p>
       </footer>
 
