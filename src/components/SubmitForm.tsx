@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import LocationAutocomplete from './LocationAutocomplete'
 import SocialInputs from './SocialInputs'
+import { edgeErrorMessage, postEdgeFunction } from '../supabaseEdge'
 import { safeSocialUrl, countWords } from '../social'
 import type { Post, FormFields, SocialPlatform } from '../types'
 
@@ -125,13 +126,13 @@ export default function SubmitForm({ onSuccess, posts = [] }: Props) {
       if (fields.linkedin.trim()) formData.append('linkedin', fields.linkedin.trim())
       if (fields.image) formData.append('image', fields.image)
 
-      const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/submit-post`, { method: 'POST', body: formData })
-      const result = await res.json() as { error?: string; requiresApproval?: boolean }
-      if (!res.ok) throw new Error(result.error)
+      const { ok, status, body } = await postEdgeFunction('submit-post', formData)
+      if (!ok) throw new Error(edgeErrorMessage(status, body))
 
+      const requiresApproval = Boolean(body.requiresApproval)
       setFields(INITIAL)
       setPreview(null)
-      if (result.requiresApproval) {
+      if (requiresApproval) {
         setStatus({ type: 'success', message: '' })
       } else {
         onSuccess()
@@ -171,7 +172,7 @@ export default function SubmitForm({ onSuccess, posts = [] }: Props) {
       <div className="form-row two-col">
         <label>
           <span>Lớp <span className="form-required">*</span></span>
-          <SuggestInput value={fields.class} onChange={(v) => set('class', v)} placeholder="CA1, CTR-N, CSU-Đ,..." disabled={submitting} suggestions={classSuggestions} />
+          <SuggestInput value={fields.class} onChange={(v) => set('class', v)} placeholder="A1, A2, A3,..." disabled={submitting} suggestions={classSuggestions} />
         </label>
         <label>
           <span>Niên khoá <span className="form-required">*</span></span>

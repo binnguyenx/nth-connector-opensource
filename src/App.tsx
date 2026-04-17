@@ -70,7 +70,7 @@ async function fetchPosts() {
 
       <footer className="site-footer">
         <p>The NTH Network · Nguyễn Thượng Hiền · Est. 1970</p>
-        <p>Built on the open-source work of Jimmy Nguyen (CA1 20-23 LHP) · Maintained by Triet Nguyen (CT 22-25 NTH)</p>
+        <p>Built on the open-source work of Jimmy Nguyen (CA1 20-23 LHP) · Maintained by Triet Nguyen (AT 22-25 NTH)</p>
       </footer>
 
       <nav className="mobile-nav" aria-label="Main navigation">

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import LocationAutocomplete from './LocationAutocomplete'
 import SocialInputs from './SocialInputs'
+import { edgeErrorMessage, postEdgeFunction } from '../supabaseEdge'
 import { safeSocialUrl, countWords } from '../social'
 import type { FormFields, SocialPlatform } from '../types'
 
@@ -89,9 +90,8 @@ export default function UpdateForm() {
       }
       if (updateField === 'photo' && fields.image) formData.append('image', fields.image)
 
-      const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/submit-update`, { method: 'POST', body: formData })
-      const result = await res.json() as { error?: string }
-      if (!res.ok) throw new Error(result.error)
+      const { ok, status, body } = await postEdgeFunction('submit-update', formData)
+      if (!ok) throw new Error(edgeErrorMessage(status, body))
 
       setDone(true)
     } catch (err) {
@@ -123,7 +123,7 @@ export default function UpdateForm() {
         </label>
         <label>
           <span>Lớp <span className="form-required">*</span></span>
-          <input type="text" value={fields.class} onChange={(e) => set('class', e.target.value)} placeholder="CA1, CTR-N,..." disabled={submitting} />
+          <input type="text" value={fields.class} onChange={(e) => set('class', e.target.value)} placeholder="A1, A2, A3,..." disabled={submitting} />
         </label>
       </div>
 
