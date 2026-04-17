@@ -10,11 +10,22 @@ export async function postEdgeFunction(
     throw new Error('Thiếu VITE_SUPABASE_URL (khai báo trên Vercel khi deploy).')
   }
 
-  const res = await fetch(`${baseUrl.replace(/\/$/, '')}/functions/v1/${functionName}`, {
-    method: 'POST',
-    headers: publishableKey?.trim() ? { Authorization: `Bearer ${publishableKey.trim()}` } : {},
-    body: formData,
-  })
+  let res: Response
+  try {
+    res = await fetch(`${baseUrl.replace(/\/$/, '')}/functions/v1/${functionName}`, {
+      method: 'POST',
+      headers: publishableKey?.trim() ? { Authorization: `Bearer ${publishableKey.trim()}` } : {},
+      body: formData,
+    })
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e)
+    if (msg === 'Failed to fetch' || e instanceof TypeError) {
+      throw new Error(
+        'Không gọi được Supabase (Failed to fetch). Thường do CORS hoặc URL sai — redeploy Edge Function submit-post / submit-update sau khi cập nhật server.'
+      )
+    }
+    throw e
+  }
 
   const text = await res.text()
   let body: Record<string, unknown> = {}

@@ -1,5 +1,6 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { Redis } from 'https://esm.sh/@upstash/redis'
+import { corsHeaders } from '../_shared/cors.ts'
 import { uploadToCloudinary } from '../_shared/cloudinary.ts'
 
 const redis = new Redis({
@@ -12,14 +13,10 @@ const supabase = createClient(
   Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
 )
 
-const CORS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, content-type',
-}
-
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS })
-  if (req.method !== 'POST') return new Response('Method not allowed', { status: 405 })
+  const CORS = corsHeaders(req)
+  if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: CORS })
+  if (req.method !== 'POST') return new Response('Method not allowed', { status: 405, headers: CORS })
 
   try {
     const ip = req.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? 'unknown'
