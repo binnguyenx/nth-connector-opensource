@@ -19,6 +19,8 @@ A full-stack web app for alumni communities to map where members live, share upd
 
 Public visitors only see posts where `approved = true` (see `supabase_setup.sql`). By default `REQUIRE_APPROVAL` in `submit-post` is **false** (new posts go live immediately). Set it to `true` and redeploy if you want manual moderation in Supabase Table Editor.
 
+**Bài cũ vẫn ẩn?** Chỉ bài **mới** được tự `approved` sau khi deploy function. Các dòng đã tồn tại với `approved = false` vẫn bị RLS chặn. Chạy **một lần** trong SQL Editor: file `supabase/approve_all_posts.sql` (hoặc trong Table Editor bật `approved` = true từng dòng).
+
 ---
 
 ## Tech stack
