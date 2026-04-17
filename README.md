@@ -14,7 +14,7 @@ A full-stack web app for alumni communities to map where members live, share upd
 
 - **Interactive 3D globe** — visualizes where alumni live with animated connection arcs from the home school. Supports zoom-based clustering, a density/city mode, and click-to-focus on individual profiles.
 - **Gallery** — filterable grid of alumni cards (by class, graduation year, city, country) synchronized with the globe.
-- **Submit form** — lets alumni add themselves with name, class, graduation year, location (via OpenStreetMap autocomplete), photo, caption, and social links.
+- **Submit form** — lets alumni add themselves with name, class, graduation year, location (via OpenStreetMap autocomplete), photo, caption, and social links. Re-submitting the same **name + class + school year** replaces the previous post (Edge Function `submit-post`).
 - **Update form** — lets existing members update their location, caption, photo, or socials without re-submitting.
 
 Public visitors only see posts where `approved = true` (see `supabase_setup.sql`). By default `REQUIRE_APPROVAL` in `submit-post` is **false** (new posts go live immediately). Set it to `true` and redeploy if you want manual moderation in Supabase Table Editor.

@@ -13,6 +13,11 @@ const REQUIRE_APPROVAL = false
 
 const DEFAULT_IMAGE_URL = Deno.env.get('DEFAULT_IMAGE_URL') ?? ''
 
+/** Match client `SubmitForm` YEAR_DASH_RE normalization */
+function normalizeSchoolYear(s: string): string {
+  return s.trim().replace(/\s*[-–]\s*/g, '-')
+}
+
 Deno.serve(async (req) => {
   const CORS = corsHeaders(req)
   if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: CORS })
@@ -82,9 +87,38 @@ Deno.serve(async (req) => {
     }
   }
 
+  const nameKey = name.trim()
+  const classKey = cls.trim()
+  const yearKey = normalizeSchoolYear(school_year)
+
+  // Replace prior submission with same identity (name + class + school year)
+  const { error: deleteError } = await supabase
+    .from('posts')
+    .delete()
+    .eq('name', nameKey)
+    .eq('class', classKey)
+    .eq('school_year', yearKey)
+
+  if (deleteError) {
+    return new Response(
+      JSON.stringify({ error: deleteError.message }),
+      { status: 400, headers: { ...CORS, 'Content-Type': 'application/json' } }
+    )
+  }
+
   const { error } = await supabase.from('posts').insert({
-    name, class: cls, school_year, city, country, caption, image_url, lat, lng,
-    instagram, facebook, linkedin,
+    name: nameKey,
+    class: classKey,
+    school_year: yearKey,
+    city,
+    country,
+    caption,
+    image_url,
+    lat,
+    lng,
+    instagram,
+    facebook,
+    linkedin,
     approved: !REQUIRE_APPROVAL,
   })
 
