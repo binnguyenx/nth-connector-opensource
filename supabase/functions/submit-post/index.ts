@@ -8,9 +8,6 @@ const supabase = createClient(
   Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
 )
 
-// Set to true to hold posts for manual approval, false to approve automatically
-const REQUIRE_APPROVAL = false
-
 const DEFAULT_IMAGE_URL = Deno.env.get('DEFAULT_IMAGE_URL') ?? ''
 
 /** Match client `SubmitForm` YEAR_DASH_RE normalization */
@@ -119,7 +116,7 @@ Deno.serve(async (req) => {
     instagram,
     facebook,
     linkedin,
-    approved: !REQUIRE_APPROVAL,
+    approved: true,
   })
 
   if (error) {
@@ -130,7 +127,7 @@ Deno.serve(async (req) => {
   }
 
   return new Response(
-    JSON.stringify({ success: true, requiresApproval: REQUIRE_APPROVAL }),
+    JSON.stringify({ success: true, requiresApproval: false }),
     { status: 200, headers: { ...CORS, 'Content-Type': 'application/json' } }
   )
 })

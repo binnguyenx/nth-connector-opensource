@@ -17,9 +17,9 @@ A full-stack web app for alumni communities to map where members live, share upd
 - **Submit form** — lets alumni add themselves with name, class, graduation year, location (via OpenStreetMap autocomplete), photo, caption, and social links. Re-submitting the same **name + class + school year** replaces the previous post (Edge Function `submit-post`).
 - **Update form** — lets existing members update their location, caption, photo, or socials without re-submitting.
 
-Public visitors only see posts where `approved = true` (see `supabase_setup.sql`). By default `REQUIRE_APPROVAL` in `submit-post` is **false** (new posts go live immediately). Set it to `true` and redeploy if you want manual moderation in Supabase Table Editor.
+Public visitors only see posts where `approved = true` (see `supabase_setup.sql`). New installs default `approved` to **true**, and Edge Function `submit-post` always inserts with `approved = true` so submissions go live immediately.
 
-**Bài cũ vẫn ẩn?** Chỉ bài **mới** được tự `approved` sau khi deploy function. Các dòng đã tồn tại với `approved = false` vẫn bị RLS chặn. Chạy **một lần** trong SQL Editor: file `supabase/approve_all_posts.sql` (hoặc trong Table Editor bật `approved` = true từng dòng).
+**Bài cũ vẫn ẩn?** Các dòng đã tồn tại với `approved = false` vẫn bị RLS chặn. Chạy **một lần** trong SQL Editor: `supabase/approve_all_posts.sql`. Trên DB cũ, chạy thêm `supabase/set_approved_default_true.sql` để dòng mới (ví dụ nhập tay trong Table Editor) mặc định public.
 
 ---
 
